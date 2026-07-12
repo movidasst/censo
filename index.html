@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- SEO & Social Preview Meta Tags -->
+  <title>Censo Plan de Emergencia Familiar | La Movida de SST</title>
+  <meta name="description" content="Formulario oficial para el registro del Plan de Emergencia Familiar. Prepara a tu familia ante situaciones de riesgo. Iniciativa de La Movida de SST.">
+  <meta property="og:title" content="Censo Plan de Emergencia Familiar | La Movida de SST">
+  <meta property="og:description" content="Regístrate en el censo para nuestro Curso de Plan de Emergencia Familiar. ¡Prepara a tu familia ante emergencias!">
+  <meta property="og:image" content="https://assets.poap.xyz/f65aa203-4f48-4c09-b056-e38fa21df542.png">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    body { font-family: 'Outfit', sans-serif; background: #f8fafc; color: #00205b; }
+    .glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(16px); border: 1px solid rgba(226, 232, 240, 0.6); }
+    .brand-input { width: 100%; padding: 0.75rem; border-radius: 1rem; border: 1px solid #e2e8f0; background: #f8fafc; outline: none; transition: all 0.3s; }
+    .brand-input:focus { border-color: #007b85; box-shadow: 0 0 0 3px rgba(0, 123, 133, 0.15); }
+    .step { display: none; } .step.active { display: block; }
+    .btn-next { background: #007b85; color: white; border-radius: 1rem; transition: all 0.3s; }
+    .btn-next:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0, 123, 133, 0.3); }
+    .glow-logo { filter: drop-shadow(0 0 20px rgba(0, 123, 133, 0.4)); }
+    .animate-float { animation: float 3s ease-in-out infinite; }
+    @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0px); } }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+  <div class="w-full max-w-lg glass rounded-[2rem] p-8 shadow-2xl">
+    <div class="text-center mb-8">
+      <div class="w-40 h-40 mx-auto mb-6 rounded-full border-4 border-white shadow-xl overflow-hidden ring-4 ring-[#007b85]/20 animate-float glow-logo">
+        <img src="https://assets.poap.xyz/f65aa203-4f48-4c09-b056-e38fa21df542.png" alt="Logo La Movida" class="w-full h-full object-cover">
+      </div>
+      <h1 class="text-3xl font-extrabold text-[#00205b]">Plan de Emergencia</h1>
+      <p class="text-sm text-[#007b85] font-bold mt-1 uppercase tracking-wider">Curso Familiar - La Movida de SST</p>
+    </div>
+
+    <form id="multiStepForm">
+      <!-- PASO 1 -->
+      <div class="step active" id="step1">
+        <h2 class="text-lg font-bold mb-4 text-[#00205b]">1. Datos del Representante</h2>
+        <input type="text" id="familia" placeholder="Nombre de la Familia (Ej: Rodríguez González)" class="brand-input mb-3" required>
+        <input type="text" id="nombre" placeholder="Nombre del Representante" class="brand-input mb-3" required>
+        <input type="number" id="edad" placeholder="Edad del Representante (Mín. 18)" min="18" class="brand-input mb-3" required>
+        <button type="button" onclick="nextStep(2)" class="btn-next w-full py-4 font-bold uppercase tracking-wide">Continuar</button>
+      </div>
+
+      <!-- PASO 2 -->
+      <div class="step" id="step2">
+        <h2 class="text-lg font-bold mb-4 text-[#00205b]">2. Ubicación y Riesgo</h2>
+        <select id="estado" onchange="updateMunicipios()" class="brand-input mb-3" required>
+          <option value="">Selecciona tu Estado</option>
+        </select>
+        <div id="zonaDisplay" class="hidden p-4 rounded-xl mb-4 text-center border-2">
+            <p class="text-xs font-bold uppercase tracking-widest">Zona Sísmica (COVENIN 1756)</p>
+            <p id="zonaText" class="text-xl font-black mt-1"></p>
+        </div>
+        <select id="municipio" class="brand-input mb-3" required>
+          <option value="">Primero selecciona el Estado</option>
+        </select>
+        <select id="tipoVivienda" class="brand-input mb-3" required>
+          <option value="">Tipo de Vivienda</option>
+          <option value="Casa Unifamiliar">Casa Unifamiliar</option>
+          <option value="Apartamento">Apartamento (Edificio)</option>
+          <option value="Anexo">Anexo / Vivienda Compartida</option>
+          <option value="Vivienda Informal">Vivienda Informal / Autoconstrucción</option>
+        </select>
+        <input type="number" id="distancia" placeholder="Distancia al hospital más cercano (KM)" class="brand-input mb-3" required>
+        <button type="button" onclick="nextStep(3)" class="btn-next w-full py-4 font-bold uppercase tracking-wide">Continuar</button>
+      </div>
+
+      <!-- PASO 3 -->
+      <div class="step" id="step3">
+        <h2 class="text-lg font-bold mb-4 text-[#00205b]">3. Grupo Familiar</h2>
+        <div id="familiaresList" class="space-y-3 mb-4"></div>
+        <button type="button" onclick="addFamiliar()" class="w-full py-3 border-2 border-dashed border-[#007b85] text-[#007b85] rounded-xl text-sm font-bold mb-4">+ Añadir familiar / mascota</button>
+        <button type="submit" id="btnSubmit" class="btn-next w-full py-4 font-bold uppercase tracking-widest">Registrar Censo</button>
+      </div>
+    </form>
+
+    <div class="mt-8 pt-6 border-t border-slate-100 text-center">
+      <a href="https://whatsapp.com/channel/0029Va0mlH5Jf05mrcCz8r3e" target="_blank" class="block w-full py-3 bg-[#70ad47] text-white rounded-xl font-bold mb-3 hover:bg-[#5a8a3a] transition shadow-lg">📢 Únete al Canal de WhatsApp</a>
+      <p class="text-xs text-slate-500 mt-4 px-4">¿Eres profesional de SST? <a href="https://registro.movidasst.com" target="_blank" class="text-[#007b85] font-bold underline">Actualiza tu registro aquí</a></p>
+      
+      <!-- Créditos -->
+      <div class="mt-6 text-[10px] text-slate-400">
+        <p>Elaborado por David Linares Brea</p>
+        <p>info@movidasst.com | WhatsApp: +56968615650</p>
+        <a href="https://www.movidasst.com" target="_blank" class="hover:text-[#007b85]">www.movidasst.com</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbxuJxMqJl6RaS7KAghb76x3oz-PxnT49Vs3k0DlXCIn71j9NnJB43w8NyLSnBR1Sb07/exec";
+    
+    const zonasSismicas = { "Alta": ["Aragua", "Distrito Capital", "Mérida", "Miranda", "Táchira", "Trujillo", "Vargas"], "Intermedia": ["Anzoátegui", "Barinas", "Carabobo", "Cojedes", "Falcón", "Lara", "Nueva Esparta", "Portuguesa", "Sucre", "Yaracuy", "Zulia"], "Baja": ["Amazonas", "Apure", "Bolívar", "Delta Amacuro", "Guárico", "Monagas"] };
+    const estadosData = {
+      "Amazonas": ["Alto Orinoco", "Atabapo", "Atures", "Autana", "Manapiare", "Maroa", "Río Negro"],
+      "Anzoátegui": ["Anaco", "Aragua", "Bolívar", "Bruzual", "Cajigal", "Carvajal", "Diego Bautista Urbaneja", "Freites", "Guanipa", "Guanta", "Independencia", "Libertad", "McGregor", "Miranda", "Monagas", "Peñalver", "Píritu", "San Juan de Capistrano", "Santa Ana", "Simón Rodríguez", "Sotillo"],
+      "Apure": ["Achaguas", "Biruaca", "Muñoz", "Páez", "Pedro Camejo", "Rómulo Gallegos", "San Fernando"],
+      "Aragua": ["Bolívar", "Camatagua", "Francisco Linares Alcántara", "Girardot", "José Ángel Lamas", "José Félix Ribas", "José Rafael Revenga", "Libertador", "Mario Briceño Iragorry", "Ocumare de la Costa de Oro", "San Casimiro", "San Sebastián", "Santiago Mariño", "Santos Michelena", "Sucre", "Tovar", "Urdaneta", "Zamora"],
+      "Barinas": ["Alberto Arvelo Torrealba", "Andrés Eloy Blanco", "Antonio José de Sucre", "Arismendi", "Barinas", "Bolívar", "Cruz Paredes", "Ezequiel Zamora", "Obispos", "Pedraza", "Rojas", "Sosa"],
+      "Bolívar": ["Angostura", "Caroní", "Cedeño", "El Callao", "Gran Sabana", "Heres", "Piar", "Roscio", "Sifontes", "Sucre", "Padre Pedro Chien"],
+      "Carabobo": ["Bejuma", "Carlos Arvelo", "Diego Ibarra", "Guacara", "Juan José Mora", "Libertador", "Los Guayos", "Miranda", "Montalbán", "Naguanagua", "Puerto Cabello", "San Diego", "San Joaquín", "Valencia"],
+      "Cojedes": ["Anzoátegui", "Ezequiel Zamora", "Girardot", "Lima Blanco", "Pao de San Juan Bautista", "Ricaurte", "Rómulo Gallegos", "Tinaco", "Tinaquillo"],
+      "Delta Amacuro": ["Antonio Díaz", "Casacoima", "Pedernales", "Tucupita"],
+      "Distrito Capital": ["Libertador"],
+      "Falcón": ["Acosta", "Bolívar", "Buchivacoa", "Cacique Manaure", "Carirubana", "Colina", "Curimagua", "Dabajuro", "Democracia", "Falcón", "Federación", "Jacura", "Los Taques", "Mauroa", "Miranda", "Monseñor Iturriza", "Palmasola", "Petit", "Píritu", "San Francisco", "Silva", "Sucre", "Tocópero", "Unión", "Urumaco", "Zamora"],
+      "Guárico": ["Camaguán", "Chaguaramas", "El Socorro", "Infante", "Las Mercedes", "Mellado", "Miranda", "Monagas", "Ortiz", "Ribas", "Roscio", "San Gerónimo de Guayabal", "Santa María de Ipire", "Zaraza"],
+      "Lara": ["Andrés Eloy Blanco", "Crespo", "Iribarren", "Jiménez", "Morán", "Palavecino", "Simón Planas", "Torres", "Urdaneta"],
+      "Mérida": ["Alberto Adriani", "Andrés Bello", "Antonio Pinto Salinas", "Aricagua", "Arzobispo Chacón", "Campo Elías", "Caracciolo Parra Olmedo", "Cardenal Quintero", "Guaraque", "Julio César Salas", "Justo Briceño", "Libertador", "Miranda", "Obispo Ramos de Lora", "Padre Noguera", "Pueblo Llano", "Rangel", "Rivas Dávila", "Santos Marquina", "Sucre", "Tovar", "Tulio Febres Cordero", "Zea"],
+      "Miranda": ["Acevedo", "Andrés Bello", "Baruta", "Brión", "Buroz", "Carrizal", "Chacao", "Cristóbal Rojas", "El Hatillo", "Guaicaipuro", "Independencia", "Lander", "Los Salias", "Páez", "Paz Castillo", "Plaza", "Sucre", "Urdaneta", "Zamora"],
+      "Monagas": ["Acosta", "Aguasay", "Bolívar", "Caripe", "Cedeño", "Ezequiel Zamora", "Libertador", "Maturín", "Piar", "Punceres", "Santa Bárbara", "Sotillo", "Uracoa"],
+      "Nueva Esparta": ["Antolín del Campo", "Arismendi", "Díaz", "García", "Gómez", "Maneiro", "Marcano", "Mariño", "Península de Macanao", "Tubores", "Villalba"],
+      "Portuguesa": ["Agua Blanca", "Araure", "Esteller", "Guanare", "Guanarito", "Monseñor José Vicente de Unda", "Ospino", "Páez", "Papelón", "San Genaro de Boconoíto", "San Rafael de Onoto", "Santa Rosalía", "Sucre", "Turén"],
+      "Sucre": ["Andrés Eloy Blanco", "Andrés Mata", "Arismendi", "Benítez", "Bermúdez", "Bolívar", "Cajigal", "Cruz Salmerón Acosta", "Libertador", "Mariño", "Mejía", "Montes", "Ribero", "Sucre", "Valdez"],
+      "Táchira": ["Andrés Bello", "Antonio Rómulo Costa", "Ayacucho", "Bolívar", "Cárdenas", "Córdoba", "Fernández Feo", "Francisco de Miranda", "García de Hevia", "Guásimos", "Independencia", "Jáuregui", "José María Vargas", "Junín", "Libertad", "Libertador", "Lobatera", "Michelena", "Panamericano", "Pedro María Ureña", "Rafael Urdaneta", "Samuel Darío Maldonado", "San Cristóbal", "Seboruco", "Simón Rodríguez", "Sucre", "Torbes", "Uribante", "San Judas Tadeo"],
+      "Trujillo": ["Andrés Bello", "Boconó", "Bolívar", "Candelaria", "Carache", "Escuque", "José Felipe Márquez Cañizares", "Juan Vicente Campo Elías", "La Ceiba", "Miranda", "Monte Carmelo", "Motatán", "Pampán", "Pampanito", "Rafael Rangel", "San Rafael de Carvajal", "Sucre", "Trujillo", "Urdaneta", "Valera"],
+      "Vargas": ["Vargas"],
+      "Yaracuy": ["Aristides Bastidas", "Bolívar", "Bruzual", "Cocorote", "Independencia", "José Antonio Páez", "La Trinidad", "Manuel Monge", "Nirgua", "Peña", "San Felipe", "Sucre", "Urachiche", "Veroes"],
+      "Zulia": ["Almirante Padilla", "Baralt", "Cabimas", "Catatumbo", "Colón", "Francisco Javier Pulgar", "Jesús Enrique Losada", "Jesús María Semprún", "La Cañada de Urdaneta", "Lagunillas", "Machiques de Perijá", "Mara", "Maracaibo", "Miranda", "Páez", "Rosario de Perijá", "San Francisco", "Santa Rita", "Simón Bolívar", "Sucre", "Valmore Rodríguez"]
+    };
+
+    const estadoSelect = document.getElementById('estado');
+    const municipioSelect = document.getElementById('municipio');
+    const zonaDisplay = document.getElementById('zonaDisplay');
+    const zonaText = document.getElementById('zonaText');
+
+    Object.keys(estadosData).forEach(estado => {
+      const option = document.createElement('option');
+      option.value = estado;
+      option.textContent = estado;
+      estadoSelect.appendChild(option);
+    });
+
+    function updateMunicipios() {
+      const estado = estadoSelect.value;
+      municipioSelect.innerHTML = '<option value="">Selecciona el Municipio</option>';
+      if(estado) {
+        let zona = "Desconocida";
+        let color = "border-slate-200 bg-slate-50 text-slate-500";
+        if (zonasSismicas.Alta.includes(estado)) { zona = "Alta Peligrosidad"; color = "border-red-500 bg-red-50 text-red-700"; }
+        else if (zonasSismicas.Intermedia.includes(estado)) { zona = "Riesgo Intermedio"; color = "border-yellow-500 bg-yellow-50 text-yellow-700"; }
+        else if (zonasSismicas.Baja.includes(estado)) { zona = "Riesgo Bajo"; color = "border-green-500 bg-green-50 text-green-700"; }
+        zonaDisplay.className = `p-4 rounded-xl mb-4 text-center border-2 ${color} active`;
+        zonaDisplay.classList.remove('hidden');
+        zonaText.textContent = zona;
+        estadosData[estado].forEach(m => {
+          const option = document.createElement('option');
+          option.value = m;
+          option.textContent = m;
+          municipioSelect.appendChild(option);
+        });
+      } else { zonaDisplay.classList.add('hidden'); }
+    }
+
+    function nextStep(step) {
+      document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+      document.getElementById('step' + step).classList.add('active');
+    }
+
+    function addFamiliar() {
+      const div = document.createElement('div');
+      div.className = "grid grid-cols-3 gap-2 mb-2 bg-slate-50 p-2 rounded-xl items-center";
+      div.innerHTML = `
+        <select class="brand-input text-[10px] p-1"><option>Hijo/a</option><option>Pareja</option><option>Adulto Mayor</option><option>Otro</option></select>
+        <input type="number" placeholder="Edad" class="brand-input p-1 text-[10px]">
+        <select class="brand-input text-[10px] p-1">
+          <option value="Ninguna">Ninguna</option>
+          <option value="Mov. Reducida">Mov. Reducida</option>
+          <option value="Dep. Médica">Dep. Médica</option>
+          <option value="Perro">🐕 Perro</option>
+          <option value="Gato">🐈 Gato</option>
+          <option value="Ave">🦜 Ave</option>
+          <option value="Otro">🐹 Otro</option>
+        </select>
+      `;
+      document.getElementById('familiaresList').appendChild(div);
+    }
+
+    document.getElementById('multiStepForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('btnSubmit');
+      btn.textContent = "Registrando...";
+      btn.disabled = true;
+      const familiares = Array.from(document.getElementById('familiaresList').children).map(div => {
+        const inputs = div.querySelectorAll('select, input');
+        return `${inputs[0].value} (${inputs[1].value || 0} años - ${inputs[2].value})`;
+      }).join(' | ');
+
+      const payload = {
+        familia: document.getElementById('familia').value,
+        nombre: document.getElementById('nombre').value,
+        edad: document.getElementById('edad').value,
+        estado: document.getElementById('estado').value,
+        municipio: document.getElementById('municipio').value,
+        tipoVivienda: document.getElementById('tipoVivienda').value,
+        distancia: document.getElementById('distancia').value,
+        familiares: familiares || "Ninguno"
+      };
+
+      try {
+        await fetch(GAS_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
+        alert("¡Registro Exitoso! Tu familia está ahora en el registro del curso.");
+        location.reload();
+      } catch(e) { alert("Error al enviar. Verifica tu conexión."); btn.disabled = false; btn.textContent = "Registrar Censo"; }
+    });
+  </script>
+</body>
+</html>
