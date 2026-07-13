@@ -361,7 +361,7 @@
   </div>
 
   <script>
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbyLnY0aYcsMJu-J8qccZvHl7a-mH7OE0usptnmSfgjzhGSF3ch0Vc29dBOPzhAhbFYT/exec";
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbyLz7e85zqS0cNi2mdduShWLDOhfujH8iSDQ_tclv6Xy_lcwVPcxXXWwRLb-1Jb4wlY/exec";
     
     // Data de Estados y Zonas (sin modificar)
     const zonasSismicas = { "Alta": ["Aragua", "Distrito Capital", "Mérida", "Miranda", "Táchira", "Trujillo", "Vargas"], "Intermedia": ["Anzoátegui", "Barinas", "Carabobo", "Cojedes", "Falcón", "Lara", "Nueva Esparta", "Portuguesa", "Sucre", "Yaracuy", "Zulia"], "Baja": ["Amazonas", "Apure", "Bolívar", "Delta Amacuro", "Guárico", "Monagas"] };
@@ -593,9 +593,25 @@
       // Filtrar el empty state al recolectar familiares
       const famItems = Array.from(document.getElementById('familiaresList').children).filter(el => el.id !== 'empty-family');
       
+      // Variables para nuestro Dashboard Analytics
+      let countHijos = 0;
+      let countMayores = 0;
+      let countMascotas = 0;
+      let countCondiciones = 0;
+
       const familiares = famItems.map(div => {
         const inputs = div.querySelectorAll('select, input');
-        return `${inputs[0].value} (${inputs[1].value || 0}a - ${inputs[2].value})`;
+        const parentesco = inputs[0].value;
+        const condicion = inputs[2].value;
+
+        // Clasificación para métricas de Dashboard
+        if (parentesco === 'Hijo/a') countHijos++;
+        if (parentesco === 'Adulto Mayor') countMayores++;
+        if (parentesco === 'Mascota') countMascotas++;
+        // Si la condición médica no es "Ninguna" ni es de un animal, cuenta como persona con vulnerabilidad
+        if (condicion !== 'Ninguna' && condicion !== 'Perro' && condicion !== 'Gato' && condicion !== 'Ave') countCondiciones++;
+
+        return `${parentesco} (${inputs[1].value || 0}a - ${condicion})`;
       }).join(' | ');
 
       const payload = {
@@ -609,6 +625,13 @@
         municipio: document.getElementById('municipio').value,
         tipoVivienda: document.getElementById('tipoVivienda').value,
         distancia: document.getElementById('distancia').value,
+        // Nuevos campos calculados para el Dashboard
+        totalFamiliares: famItems.length,
+        cantHijos: countHijos,
+        cantMayores: countMayores,
+        cantMascotas: countMascotas,
+        cantCondiciones: countCondiciones,
+        // Campo de detalle textual
         familiares: familiares || "Ninguno (Vive Solo)"
       };
 
