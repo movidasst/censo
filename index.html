@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   
   <!-- SEO & Social Preview Meta Tags -->
   <title>Censo Plan de Emergencia Familiar | La Movida de SST</title>
@@ -14,91 +14,356 @@
   <meta name="twitter:card" content="summary_large_image">
 
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   
   <style>
-    body { font-family: 'Outfit', sans-serif; background: #f8fafc; color: #00205b; }
-    .glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(16px); border: 1px solid rgba(226, 232, 240, 0.6); }
-    .brand-input { width: 100%; padding: 0.75rem; border-radius: 1rem; border: 1px solid #e2e8f0; background: #f8fafc; outline: none; transition: all 0.3s; }
-    .brand-input:focus { border-color: #007b85; box-shadow: 0 0 0 3px rgba(0, 123, 133, 0.15); }
-    .step { display: none; } .step.active { display: block; }
-    .btn-next { background: #007b85; color: white; border-radius: 1rem; transition: all 0.3s; }
-    .btn-next:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0, 123, 133, 0.3); }
-    .glow-logo { filter: drop-shadow(0 0 20px rgba(0, 123, 133, 0.4)); }
-    .animate-float { animation: float 3s ease-in-out infinite; }
-    @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0px); } }
+    :root {
+      --primary: #007b85;
+      --primary-hover: #006870;
+      --secondary: #00205b;
+      --glass-bg: rgba(255, 255, 255, 0.85);
+      --glass-border: rgba(255, 255, 255, 0.4);
+    }
+    
+    body { 
+      font-family: 'Outfit', sans-serif; 
+      background: linear-gradient(135deg, #f0f8ff 0%, #e6f7f8 50%, #f1f5f9 100%);
+      background-attachment: fixed;
+      color: var(--secondary); 
+      overflow-x: hidden;
+      -webkit-tap-highlight-color: transparent;
+    }
+    
+    /* Fondo animado sutil */
+    .bg-blobs {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      z-index: -1;
+      overflow: hidden;
+      pointer-events: none;
+    }
+    .blob {
+      position: absolute;
+      filter: blur(80px);
+      z-index: -1;
+      opacity: 0.4;
+      animation: drift 20s infinite alternate ease-in-out;
+    }
+    .blob-1 { width: 400px; height: 400px; background: #007b85; top: -10%; left: -10%; }
+    .blob-2 { width: 500px; height: 500px; background: #60a5fa; bottom: -20%; right: -10%; animation-delay: -5s; }
+    
+    /* Glassmorphism Refinado */
+    .glass { 
+      background: var(--glass-bg); 
+      backdrop-filter: blur(20px); 
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 25px 50px -12px rgba(0, 32, 91, 0.15), inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+    }
+    
+    /* Inputs Estilizados */
+    .brand-input { 
+      width: 100%; 
+      padding: 1rem 1.25rem; 
+      border-radius: 1rem; 
+      border: 1.5px solid #e2e8f0; 
+      background: rgba(255, 255, 255, 0.9); 
+      outline: none; 
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--secondary);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+    }
+    .brand-input::placeholder { color: #94a3b8; font-weight: 400; }
+    .brand-input:focus { 
+      border-color: var(--primary); 
+      box-shadow: 0 0 0 4px rgba(0, 123, 133, 0.15); 
+      background: #ffffff;
+      transform: translateY(-1px);
+    }
+    
+    /* Transiciones de Pasos tipo App Nativa */
+    .step { 
+      display: none; 
+      opacity: 0;
+    }
+    .step.active { 
+      display: block; 
+      animation: slideIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; 
+    }
+    
+    /* Botones */
+    .btn-next { 
+      background: linear-gradient(135deg, var(--primary) 0%, #00939e 100%);
+      color: white; 
+      border-radius: 1.25rem; 
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-next::after {
+      content: '';
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      background: linear-gradient(to right, transparent, rgba(255,255,255,0.2), transparent);
+      transform: translateX(-100%);
+    }
+    .btn-next:hover { 
+      transform: translateY(-2px); 
+      box-shadow: 0 15px 25px -5px rgba(0, 123, 133, 0.3); 
+    }
+    .btn-next:hover::after {
+      transform: translateX(100%);
+      transition: transform 0.6s ease;
+    }
+    .btn-next:active { transform: translateY(1px); box-shadow: none; }
+    .btn-next:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
+    
+    /* Animaciones Generales */
+    .glow-logo { filter: drop-shadow(0 0 25px rgba(0, 123, 133, 0.4)); }
+    .animate-float { animation: float 4s ease-in-out infinite; }
+    
+    @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-12px); } }
+    @keyframes slideIn { 
+      from { opacity: 0; transform: translateX(30px) scale(0.98); } 
+      to { opacity: 1; transform: translateX(0) scale(1); } 
+    }
+    @keyframes drift {
+      from { transform: translate(0, 0) scale(1); }
+      to { transform: translate(30px, -30px) scale(1.1); }
+    }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-8px); }
+      50% { transform: translateX(8px); }
+      75% { transform: translateX(-8px); }
+    }
+    .input-error {
+      border-color: #ef4444 !important;
+      background-color: #fef2f2 !important;
+      animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+    }
+
+    /* Modal */
+    .modal-backdrop { transition: all 0.4s ease; backdrop-filter: blur(8px); }
+    .modal-content { transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+    
+    /* Custom Scrollbar para el grupo familiar */
+    .custom-scroll::-webkit-scrollbar { width: 6px; }
+    .custom-scroll::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 10px; }
+    .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+    
+    /* Utilidad visual para selects */
+    select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1.2em; }
   </style>
 </head>
-<body class="min-h-screen flex items-center justify-center p-4">
 
-  <div class="w-full max-w-lg glass rounded-[2rem] p-8 shadow-2xl">
-    <div class="text-center mb-8">
-      <div class="w-40 h-40 mx-auto mb-6 rounded-full border-4 border-white shadow-xl overflow-hidden ring-4 ring-[#007b85]/20 animate-float glow-logo">
-        <img src="https://assets.poap.xyz/f65aa203-4f48-4c09-b056-e38fa21df542.png" alt="Logo La Movida" class="w-full h-full object-cover">
+<body class="min-h-screen flex items-center justify-center p-3 sm:p-6 lg:p-8">
+
+  <!-- Fondo animado -->
+  <div class="bg-blobs">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+  </div>
+
+  <div class="w-full max-w-[32rem] glass rounded-[2.5rem] p-6 sm:p-10 shadow-2xl relative z-10 mx-auto">
+    
+    <!-- Encabezado -->
+    <div class="text-center mb-10 mt-2">
+      <div class="w-28 h-28 sm:w-36 sm:h-36 mx-auto mb-6 rounded-full border-4 border-white shadow-xl overflow-hidden ring-4 ring-[#007b85]/30 animate-float glow-logo relative bg-white">
+        <img src="https://assets.poap.xyz/f65aa203-4f48-4c09-b056-e38fa21df542.png" alt="Logo La Movida" class="w-full h-full object-cover p-1">
       </div>
-      <h1 class="text-3xl font-extrabold text-[#00205b]">Plan de Emergencia</h1>
-      <p class="text-sm text-[#007b85] font-bold mt-1 uppercase tracking-wider">Curso Familiar - La Movida de SST</p>
+      <h1 class="text-2xl sm:text-[1.75rem] leading-tight font-extrabold text-[#00205b] mb-2 tracking-tight">Plan de Emergencia Familiar</h1>
+      <span class="inline-block px-4 py-1.5 bg-[#007b85]/10 text-[#007b85] text-xs sm:text-sm font-bold rounded-full uppercase tracking-widest">
+        Curso Oficial
+      </span>
     </div>
 
-    <form id="multiStepForm">
+    <!-- Stepper (Barra de progreso visual) -->
+    <div class="mb-10 px-4">
+        <div class="flex items-center justify-between relative">
+            <div class="absolute left-0 top-1/2 -translate-y-1/2 w-full h-1 bg-slate-200 rounded-full -z-10"></div>
+            <!-- La barra verde que se llena -->
+            <div id="progress-line" class="absolute left-0 top-1/2 -translate-y-1/2 h-1 bg-[#007b85] rounded-full -z-10 transition-all duration-500 w-0"></div>
+            
+            <!-- Puntos -->
+            <div id="dot-1" class="w-10 h-10 rounded-full bg-[#007b85] text-white flex items-center justify-center font-bold text-sm shadow-lg shadow-[#007b85]/40 transition-colors duration-300">1</div>
+            <div id="dot-2" class="w-10 h-10 rounded-full bg-slate-100 border-2 border-slate-200 text-slate-400 flex items-center justify-center font-bold text-sm transition-colors duration-300">2</div>
+            <div id="dot-3" class="w-10 h-10 rounded-full bg-slate-100 border-2 border-slate-200 text-slate-400 flex items-center justify-center font-bold text-sm transition-colors duration-300">3</div>
+        </div>
+        <div class="flex justify-between mt-2 text-[10px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider">
+            <span id="text-dot-1" class="text-[#007b85]">Titular</span>
+            <span id="text-dot-2" class="text-center">Ubicación</span>
+            <span id="text-dot-3" class="text-right">Familia</span>
+        </div>
+    </div>
+
+    <form id="multiStepForm" novalidate>
       <!-- PASO 1 -->
       <div class="step active" id="step1">
-        <h2 class="text-lg font-bold mb-4 text-[#00205b]">1. Datos del Representante</h2>
-        <input type="text" id="familia" placeholder="Nombre de la Familia (Ej: Rodríguez González)" class="brand-input mb-3" required>
-        <input type="text" id="nombre" placeholder="Nombre del Representante" class="brand-input mb-3" required>
-        <input type="number" id="edad" placeholder="Edad del Representante (Mín. 18)" min="18" class="brand-input mb-3" required>
-        <button type="button" onclick="nextStep(2)" class="btn-next w-full py-4 font-bold uppercase tracking-wide">Continuar</button>
+        <div class="mb-6">
+            <h2 class="text-xl font-bold text-[#00205b]">Datos del Representante</h2>
+            <p class="text-sm text-slate-500 mt-1">Información principal del jefe de familia.</p>
+        </div>
+        
+        <div class="space-y-4 mb-8">
+            <div class="relative">
+                <label class="block text-xs font-semibold text-slate-500 mb-1 ml-1 uppercase">Apellido de la Familia</label>
+                <input type="text" id="familia" placeholder="Ej: Rodríguez González" class="brand-input" required pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+" oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '')">
+            </div>
+            
+            <div class="relative">
+                <label class="block text-xs font-semibold text-slate-500 mb-1 ml-1 uppercase">Nombre del Representante</label>
+                <input type="text" id="nombre" placeholder="Tu nombre completo" class="brand-input" required pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+" oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '')">
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4">
+                <div class="relative">
+                    <label class="block text-xs font-semibold text-slate-500 mb-1 ml-1 uppercase">Cédula</label>
+                    <input type="text" id="cedula" inputmode="numeric" placeholder="Ej: 12345678" class="brand-input" required pattern="[0-9]+" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                </div>
+                <div class="relative">
+                    <label class="block text-xs font-semibold text-slate-500 mb-1 ml-1 uppercase">Edad</label>
+                    <input type="number" id="edad" inputmode="numeric" placeholder="Mín. 18" min="18" class="brand-input" required>
+                </div>
+            </div>
+
+            <div class="relative">
+                <label class="block text-xs font-semibold text-slate-500 mb-1 ml-1 uppercase">Correo Electrónico</label>
+                <input type="email" id="correo" inputmode="email" placeholder="tucorreo@ejemplo.com" class="brand-input" required>
+            </div>
+            
+            <div class="relative">
+                <label class="block text-xs font-semibold text-slate-500 mb-1 ml-1 uppercase">WhatsApp (12 dígitos)</label>
+                <div class="relative flex items-center">
+                    <span class="absolute left-4 text-slate-400 font-bold">+</span>
+                    <input type="tel" id="whatsapp" inputmode="numeric" placeholder="584123456789" class="brand-input pl-8" required maxlength="12" pattern="^584\d{9}$" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                </div>
+                <p class="text-[10px] text-slate-400 mt-1.5 ml-2">Debe iniciar con 584 (Ej: 584141234567)</p>
+            </div>
+        </div>
+
+        <button type="button" onclick="nextStep(2)" class="btn-next w-full py-4 text-base font-bold uppercase tracking-widest flex items-center justify-center gap-2">
+            Siguiente Paso
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+        </button>
       </div>
 
       <!-- PASO 2 -->
       <div class="step" id="step2">
-        <h2 class="text-lg font-bold mb-4 text-[#00205b]">2. Ubicación y Riesgo</h2>
-        <select id="estado" onchange="updateMunicipios()" class="brand-input mb-3" required>
-          <option value="">Selecciona tu Estado</option>
-        </select>
-        <div id="zonaDisplay" class="hidden p-4 rounded-xl mb-4 text-center border-2">
-            <p class="text-xs font-bold uppercase tracking-widest">Zona Sísmica (COVENIN 1756)</p>
-            <p id="zonaText" class="text-xl font-black mt-1"></p>
+        <div class="mb-6">
+            <h2 class="text-xl font-bold text-[#00205b]">Ubicación y Entorno</h2>
+            <p class="text-sm text-slate-500 mt-1">Evalúa el riesgo de tu vivienda actual.</p>
         </div>
-        <select id="municipio" class="brand-input mb-3" required>
-          <option value="">Primero selecciona el Estado</option>
-        </select>
-        <select id="tipoVivienda" class="brand-input mb-3" required>
-          <option value="">Tipo de Vivienda</option>
-          <option value="Casa Unifamiliar">Casa Unifamiliar</option>
-          <option value="Apartamento">Apartamento (Edificio)</option>
-          <option value="Anexo">Anexo / Vivienda Compartida</option>
-          <option value="Vivienda Informal">Vivienda Informal / Autoconstrucción</option>
-        </select>
-        <input type="number" id="distancia" placeholder="Distancia al hospital más cercano (KM)" class="brand-input mb-3" required>
-        <button type="button" onclick="nextStep(3)" class="btn-next w-full py-4 font-bold uppercase tracking-wide">Continuar</button>
+
+        <div class="space-y-4 mb-8">
+            <div>
+                <label class="block text-xs font-semibold text-slate-500 mb-1 ml-1 uppercase">Estado</label>
+                <select id="estado" onchange="updateMunicipios()" class="brand-input font-medium" required>
+                  <option value="">Selecciona tu Estado</option>
+                </select>
+            </div>
+            
+            <!-- Zona Sísmica Display -->
+            <div id="zonaDisplay" class="hidden p-5 rounded-2xl mb-4 text-center border-2 transition-all duration-500 transform origin-top">
+                <p class="text-[10px] font-bold uppercase tracking-widest opacity-70 mb-1 flex justify-center items-center gap-1">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    Nivel Sísmico (COVENIN)
+                </p>
+                <p id="zonaText" class="text-xl font-black tracking-tight"></p>
+            </div>
+            
+            <div>
+                <label class="block text-xs font-semibold text-slate-500 mb-1 ml-1 uppercase">Municipio</label>
+                <select id="municipio" class="brand-input font-medium" required>
+                  <option value="">Selecciona el Municipio</option>
+                </select>
+            </div>
+            
+            <div>
+                <label class="block text-xs font-semibold text-slate-500 mb-1 ml-1 uppercase">Tipo de Vivienda</label>
+                <select id="tipoVivienda" class="brand-input font-medium" required>
+                  <option value="">Selecciona el tipo</option>
+                  <option value="Casa Unifamiliar">🏡 Casa Unifamiliar</option>
+                  <option value="Apartamento">🏢 Apartamento (Edificio)</option>
+                  <option value="Anexo">🏘️ Anexo / Compartida</option>
+                  <option value="Vivienda Informal">⛺ Autoconstrucción / Informal</option>
+                </select>
+            </div>
+            
+            <div>
+                <label class="block text-xs font-semibold text-slate-500 mb-1 ml-1 uppercase">Distancia al Hospital (KM)</label>
+                <input type="number" inputmode="decimal" id="distancia" placeholder="Ej: 5" class="brand-input" required>
+            </div>
+        </div>
+        
+        <div class="flex gap-3 mt-8">
+          <button type="button" onclick="nextStep(1)" class="w-1/3 py-4 font-bold text-slate-500 bg-white border border-slate-200 rounded-[1.25rem] hover:bg-slate-50 transition active:scale-95">Atrás</button>
+          <button type="button" onclick="nextStep(3)" class="btn-next w-2/3 py-4 text-base font-bold uppercase tracking-widest flex items-center justify-center gap-2">
+            Continuar
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+          </button>
+        </div>
       </div>
 
       <!-- PASO 3 -->
       <div class="step" id="step3">
-        <h2 class="text-lg font-bold mb-4 text-[#00205b]">3. Grupo Familiar</h2>
-        <div id="familiaresList" class="space-y-3 mb-4"></div>
-        <button type="button" onclick="addFamiliar()" class="w-full py-3 border-2 border-dashed border-[#007b85] text-[#007b85] rounded-xl text-sm font-bold mb-4">+ Añadir familiar / mascota</button>
-        <button type="submit" id="btnSubmit" class="btn-next w-full py-4 font-bold uppercase tracking-widest">Registrar Censo</button>
+        <div class="mb-6">
+            <h2 class="text-xl font-bold text-[#00205b]">Tu Grupo Familiar</h2>
+            <p class="text-sm text-slate-500 mt-1">Registra a las personas y mascotas que viven en casa.</p>
+        </div>
+        
+        <!-- Contenedor con scroll para evitar que el form crezca infinitamente -->
+        <div id="familiaresList" class="space-y-3 mb-4 max-h-[40vh] overflow-y-auto custom-scroll pr-2">
+            <!-- Empty state visual -->
+            <div id="empty-family" class="text-center py-6 px-4 bg-slate-50 rounded-2xl border border-dashed border-slate-300">
+                <div class="text-3xl mb-2">👨‍👩‍👧‍👦</div>
+                <p class="text-sm text-slate-500 font-medium">Aún no has agregado familiares.<br>Si vives solo, puedes continuar.</p>
+            </div>
+        </div>
+        
+        <button type="button" onclick="addFamiliar()" class="w-full py-3.5 border-2 border-dashed border-[#007b85] text-[#007b85] bg-[#007b85]/5 hover:bg-[#007b85]/10 active:scale-[0.98] transition-all rounded-[1.25rem] text-sm font-bold mb-8 flex items-center justify-center gap-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+            Añadir Familiar / Mascota
+        </button>
+        
+        <div class="flex gap-3">
+          <button type="button" onclick="nextStep(2)" class="w-1/3 py-4 font-bold text-slate-500 bg-white border border-slate-200 rounded-[1.25rem] hover:bg-slate-50 transition active:scale-95">Atrás</button>
+          <button type="submit" id="btnSubmit" class="btn-next w-2/3 py-4 text-base font-bold uppercase tracking-widest shadow-xl shadow-[#007b85]/20">
+            Finalizar
+          </button>
+        </div>
       </div>
     </form>
 
-    <div class="mt-8 pt-6 border-t border-slate-100 text-center">
-      <a href="https://whatsapp.com/channel/0029Va0mlH5Jf05mrcCz8r3e" target="_blank" class="block w-full py-3 bg-[#70ad47] text-white rounded-xl font-bold mb-3 hover:bg-[#5a8a3a] transition shadow-lg">📢 Únete al Canal de WhatsApp</a>
-      <p class="text-xs text-slate-500 mt-4 px-4">¿Eres profesional de SST? <a href="https://registro.movidasst.com" target="_blank" class="text-[#007b85] font-bold underline">Actualiza tu registro aquí</a></p>
+    <div class="mt-10 pt-6 border-t border-slate-200/60 text-center relative z-10">
+      <a href="https://whatsapp.com/channel/0029Va0mlH5Jf05mrcCz8r3e" target="_blank" class="group flex items-center justify-center gap-3 w-full py-3.5 bg-gradient-to-r from-[#25D366] to-[#1DA851] text-white rounded-[1.25rem] font-bold mb-4 hover:shadow-lg hover:shadow-[#25D366]/40 transition-all active:scale-[0.98]">
+          <svg class="w-6 h-6 group-hover:animate-bounce" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+          Únete a la Comunidad
+      </a>
+      <p class="text-xs text-slate-500 px-2">¿Profesional de SST? <a href="https://registro.movidasst.com" target="_blank" class="text-[#007b85] font-bold hover:underline">Actualiza tus datos aquí</a></p>
       
-      <!-- Créditos -->
-      <div class="mt-6 text-[10px] text-slate-400">
-        <p>Elaborado por David Linares Brea</p>
-        <p>info@movidasst.com | WhatsApp: +56968615650</p>
-        <a href="https://www.movidasst.com" target="_blank" class="hover:text-[#007b85]">www.movidasst.com</a>
+      <div class="mt-6 text-[10px] text-slate-400 space-y-1 bg-slate-50/50 p-3 rounded-xl border border-slate-100">
+        <p class="font-medium">Diseñado y elaborado por David Linares Brea</p>
+        <p>info@movidasst.com | WA: +56968615650</p>
+        <a href="https://www.movidasst.com" target="_blank" class="inline-block mt-1 text-[#007b85] font-semibold">www.movidasst.com</a>
       </div>
     </div>
   </div>
 
+  <div id="customModal" class="fixed inset-0 z-50 flex items-center justify-center pointer-events-none opacity-0 modal-backdrop">
+    <div class="absolute inset-0 bg-slate-900/60 transition-opacity"></div>
+    <div id="customModalContent" class="bg-white rounded-[2rem] p-8 max-w-sm w-[90%] mx-auto text-center relative z-10 scale-95 shadow-2xl modal-content border border-slate-100">
+      <div id="modalIcon" class="text-7xl mb-4"></div>
+      <h3 id="modalTitle" class="text-2xl font-black mb-3 text-[#00205b] tracking-tight"></h3>
+      <p id="modalMessage" class="text-[0.95rem] text-slate-500 mb-8 font-medium leading-relaxed"></p>
+      <button onclick="closeModal()" class="btn-next w-full py-4 text-sm font-bold uppercase tracking-widest">Aceptar</button>
+    </div>
+  </div>
+
   <script>
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbxuJxMqJl6RaS7KAghb76x3oz-PxnT49Vs3k0DlXCIn71j9NnJB43w8NyLSnBR1Sb07/exec";
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbyLnY0aYcsMJu-J8qccZvHl7a-mH7OE0usptnmSfgjzhGSF3ch0Vc29dBOPzhAhbFYT/exec";
     
+    // Data de Estados y Zonas (sin modificar)
     const zonasSismicas = { "Alta": ["Aragua", "Distrito Capital", "Mérida", "Miranda", "Táchira", "Trujillo", "Vargas"], "Intermedia": ["Anzoátegui", "Barinas", "Carabobo", "Cojedes", "Falcón", "Lara", "Nueva Esparta", "Portuguesa", "Sucre", "Yaracuy", "Zulia"], "Baja": ["Amazonas", "Apure", "Bolívar", "Delta Amacuro", "Guárico", "Monagas"] };
     const estadosData = {
       "Amazonas": ["Alto Orinoco", "Atabapo", "Atures", "Autana", "Manapiare", "Maroa", "Río Negro"],
@@ -133,10 +398,7 @@
     const zonaText = document.getElementById('zonaText');
 
     Object.keys(estadosData).forEach(estado => {
-      const option = document.createElement('option');
-      option.value = estado;
-      option.textContent = estado;
-      estadoSelect.appendChild(option);
+      estadoSelect.appendChild(new Option(estado, estado));
     });
 
     function updateMunicipios() {
@@ -144,72 +406,236 @@
       municipioSelect.innerHTML = '<option value="">Selecciona el Municipio</option>';
       if(estado) {
         let zona = "Desconocida";
-        let color = "border-slate-200 bg-slate-50 text-slate-500";
-        if (zonasSismicas.Alta.includes(estado)) { zona = "Alta Peligrosidad"; color = "border-red-500 bg-red-50 text-red-700"; }
-        else if (zonasSismicas.Intermedia.includes(estado)) { zona = "Riesgo Intermedio"; color = "border-yellow-500 bg-yellow-50 text-yellow-700"; }
-        else if (zonasSismicas.Baja.includes(estado)) { zona = "Riesgo Bajo"; color = "border-green-500 bg-green-50 text-green-700"; }
-        zonaDisplay.className = `p-4 rounded-xl mb-4 text-center border-2 ${color} active`;
+        let color = "border-slate-200 bg-slate-50 text-slate-500 shadow-sm";
+        
+        if (zonasSismicas.Alta.includes(estado)) { 
+            zona = "Alta Peligrosidad"; 
+            color = "border-red-200 bg-red-50 text-red-600 shadow-sm shadow-red-500/10"; 
+        } else if (zonasSismicas.Intermedia.includes(estado)) { 
+            zona = "Riesgo Intermedio"; 
+            color = "border-amber-200 bg-amber-50 text-amber-600 shadow-sm shadow-amber-500/10"; 
+        } else if (zonasSismicas.Baja.includes(estado)) { 
+            zona = "Riesgo Bajo"; 
+            color = "border-emerald-200 bg-emerald-50 text-emerald-600 shadow-sm shadow-emerald-500/10"; 
+        }
+        
+        zonaDisplay.className = `p-4 rounded-2xl mb-6 text-center border-2 transition-all duration-500 ${color}`;
         zonaDisplay.classList.remove('hidden');
         zonaText.textContent = zona;
+        
         estadosData[estado].forEach(m => {
-          const option = document.createElement('option');
-          option.value = m;
-          option.textContent = m;
-          municipioSelect.appendChild(option);
+          municipioSelect.appendChild(new Option(m, m));
         });
-      } else { zonaDisplay.classList.add('hidden'); }
+      } else { 
+          zonaDisplay.classList.add('hidden'); 
+      }
+    }
+
+    // Funciones de UI para el Stepper
+    function updateStepper(step) {
+        const progressLine = document.getElementById('progress-line');
+        // Actualizar línea de progreso
+        if(step === 1) progressLine.style.width = '0%';
+        if(step === 2) progressLine.style.width = '50%';
+        if(step === 3) progressLine.style.width = '100%';
+
+        // Actualizar diseño de los puntos
+        for(let i=1; i<=3; i++) {
+            const dot = document.getElementById(`dot-${i}`);
+            const text = document.getElementById(`text-dot-${i}`);
+            
+            if(i <= step) {
+                dot.className = "w-10 h-10 rounded-full bg-[#007b85] text-white flex items-center justify-center font-bold text-sm shadow-lg shadow-[#007b85]/40 transition-colors duration-300";
+                text.className = `text-[#007b85] font-bold ${i===2?'text-center':i===3?'text-right':''}`;
+            } else {
+                dot.className = "w-10 h-10 rounded-full bg-slate-100 border-2 border-slate-200 text-slate-400 flex items-center justify-center font-bold text-sm transition-colors duration-300";
+                text.className = `text-slate-400 font-semibold ${i===2?'text-center':i===3?'text-right':''}`;
+            }
+        }
+    }
+
+    function validateStep(step) {
+      const currentStep = document.getElementById('step' + step);
+      const inputs = currentStep.querySelectorAll('input[required], select[required]');
+      let isValid = true;
+      
+      inputs.forEach(input => {
+        let isInputValid = true;
+        
+        if (!input.value.trim()) isInputValid = false;
+        else if (input.id === 'correo' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.value)) isInputValid = false;
+        else if (input.id === 'whatsapp' && !/^584\d{9}$/.test(input.value)) isInputValid = false;
+
+        if (!isInputValid) {
+          isValid = false;
+          // Shake animation & red border
+          input.classList.remove('input-error');
+          void input.offsetWidth; // trigger reflow
+          input.classList.add('input-error');
+          setTimeout(() => input.classList.remove('input-error'), 1500);
+        }
+      });
+      return isValid;
     }
 
     function nextStep(step) {
-      document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
-      document.getElementById('step' + step).classList.add('active');
+      const currentActive = document.querySelector('.step.active');
+      const currentStepNum = parseInt(currentActive.id.replace('step', ''));
+      
+      if(step > currentStepNum && !validateStep(currentStepNum)) return; 
+
+      document.querySelectorAll('.step').forEach(s => {
+          s.classList.remove('active');
+          s.style.opacity = '0';
+      });
+      
+      updateStepper(step);
+      
+      const nextStepEl = document.getElementById('step' + step);
+      nextStepEl.classList.add('active');
     }
 
+    // Diseño renovado para agregar familiares (Tarjetas tipo mobile-first)
+    let familiarCount = 0;
     function addFamiliar() {
+      familiarCount++;
+      const emptyState = document.getElementById('empty-family');
+      if(emptyState) emptyState.style.display = 'none';
+
       const div = document.createElement('div');
-      div.className = "grid grid-cols-3 gap-2 mb-2 bg-slate-50 p-2 rounded-xl items-center";
+      div.className = "flex flex-col sm:flex-row gap-3 bg-white p-4 rounded-[1.25rem] border border-slate-200 shadow-sm relative animate-[slideIn_0.3s_ease-out]";
+      
+      // Botón de eliminar tipo X en la esquina superior derecha
       div.innerHTML = `
-        <select class="brand-input text-[10px] p-1"><option>Hijo/a</option><option>Pareja</option><option>Adulto Mayor</option><option>Otro</option></select>
-        <input type="number" placeholder="Edad" class="brand-input p-1 text-[10px]">
-        <select class="brand-input text-[10px] p-1">
-          <option value="Ninguna">Ninguna</option>
-          <option value="Mov. Reducida">Mov. Reducida</option>
-          <option value="Dep. Médica">Dep. Médica</option>
-          <option value="Perro">🐕 Perro</option>
-          <option value="Gato">🐈 Gato</option>
-          <option value="Ave">🦜 Ave</option>
-          <option value="Otro">🐹 Otro</option>
-        </select>
+        <button type="button" class="absolute -top-2 -right-2 bg-red-100 text-red-500 w-7 h-7 rounded-full flex items-center justify-center font-bold hover:bg-red-500 hover:text-white transition-colors shadow-sm" onclick="removeFamiliar(this)">×</button>
+        
+        <div class="flex-1">
+            <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Parentesco</label>
+            <select class="brand-input !p-2 !text-sm"><option>Hijo/a</option><option>Pareja</option><option>Padre/Madre</option><option>Adulto Mayor</option><option>Mascota</option><option>Otro</option></select>
+        </div>
+        <div class="w-full sm:w-24">
+            <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Edad</label>
+            <input type="number" inputmode="numeric" placeholder="Años" class="brand-input !p-2 !text-sm text-center">
+        </div>
+        <div class="flex-1">
+            <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Condición</label>
+            <select class="brand-input !p-2 !text-sm">
+                <option value="Ninguna">Ninguna</option>
+                <option value="Mov. Reducida">Mov. Reducida</option>
+                <option value="Dep. Médica">Dep. Médica</option>
+                <option value="Embarazo">Embarazo</option>
+                <option value="Perro">🐕 Perro</option>
+                <option value="Gato">🐈 Gato</option>
+                <option value="Ave">🦜 Ave</option>
+            </select>
+        </div>
       `;
       document.getElementById('familiaresList').appendChild(div);
+      // Scroll automático hacia el nuevo elemento
+      document.getElementById('familiaresList').scrollTop = document.getElementById('familiaresList').scrollHeight;
     }
 
+    function removeFamiliar(btn) {
+        btn.parentElement.remove();
+        familiarCount--;
+        if(familiarCount === 0) {
+            document.getElementById('empty-family').style.display = 'block';
+        }
+    }
+
+    // Modal Logic
+    let reloadAfterClose = false;
+    function showModal(title, message, isSuccess) {
+      const modal = document.getElementById('customModal');
+      const content = document.getElementById('customModalContent');
+      
+      document.getElementById('modalTitle').textContent = title;
+      document.getElementById('modalMessage').textContent = message;
+      
+      // Icono visual interactivo
+      const icon = document.getElementById('modalIcon');
+      if(isSuccess) {
+          icon.innerHTML = '🎉';
+          icon.className = 'text-7xl mb-4 animate-[bounce_1s_ease-in-out_infinite]';
+      } else {
+          icon.innerHTML = '⚠️';
+          icon.className = 'text-7xl mb-4 animate-[shake_0.5s_ease-in-out]';
+      }
+      
+      reloadAfterClose = isSuccess;
+      modal.classList.remove('pointer-events-none', 'opacity-0');
+      content.classList.remove('scale-95');
+      content.classList.add('scale-100');
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('customModal');
+      const content = document.getElementById('customModalContent');
+      
+      modal.classList.add('pointer-events-none', 'opacity-0');
+      content.classList.remove('scale-100');
+      content.classList.add('scale-95');
+      
+      if(reloadAfterClose) setTimeout(() => location.reload(), 300);
+    }
+
+    // Envío del Formulario
     document.getElementById('multiStepForm').addEventListener('submit', async (e) => {
       e.preventDefault();
+      
+      if(!validateStep(3)) return; // Validar si agregó familiares o los dejó vacíos (aunque no hay required en familiares)
+
       const btn = document.getElementById('btnSubmit');
-      btn.textContent = "Registrando...";
+      const originalText = btn.innerHTML;
+      btn.innerHTML = `<svg class="animate-spin -ml-1 mr-2 h-5 w-5 text-white inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Procesando...`;
       btn.disabled = true;
-      const familiares = Array.from(document.getElementById('familiaresList').children).map(div => {
+      
+      // Filtrar el empty state al recolectar familiares
+      const famItems = Array.from(document.getElementById('familiaresList').children).filter(el => el.id !== 'empty-family');
+      
+      const familiares = famItems.map(div => {
         const inputs = div.querySelectorAll('select, input');
-        return `${inputs[0].value} (${inputs[1].value || 0} años - ${inputs[2].value})`;
+        return `${inputs[0].value} (${inputs[1].value || 0}a - ${inputs[2].value})`;
       }).join(' | ');
 
       const payload = {
         familia: document.getElementById('familia').value,
         nombre: document.getElementById('nombre').value,
+        cedula: document.getElementById('cedula').value,
+        correo: document.getElementById('correo').value,
+        whatsapp: document.getElementById('whatsapp').value,
         edad: document.getElementById('edad').value,
         estado: document.getElementById('estado').value,
         municipio: document.getElementById('municipio').value,
         tipoVivienda: document.getElementById('tipoVivienda').value,
         distancia: document.getElementById('distancia').value,
-        familiares: familiares || "Ninguno"
+        familiares: familiares || "Ninguno (Vive Solo)"
       };
 
       try {
-        await fetch(GAS_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
-        alert("¡Registro Exitoso! Tu familia está ahora en el registro del curso.");
-        location.reload();
-      } catch(e) { alert("Error al enviar. Verifica tu conexión."); btn.disabled = false; btn.textContent = "Registrar Censo"; }
+        const response = await fetch(GAS_URL, { 
+            method: 'POST', 
+            body: JSON.stringify(payload) 
+        });
+        
+        const data = await response.json();
+        
+        if (data.result === 'exists') {
+            showModal("Cédula Registrada", "El número de cédula ingresado ya forma parte de nuestro Censo. Por favor verifica tus datos.", false);
+            btn.disabled = false;
+            btn.innerHTML = originalText;
+        } else if (data.result === 'success') {
+            showModal("¡Registro Exitoso!", "Hemos guardado el plan de emergencia de tu hogar. ¡Gracias por proteger a tu familia!", true);
+        } else {
+            showModal("Ups, algo pasó", data.message || "Tuvimos un problema procesando tu solicitud.", false);
+            btn.disabled = false;
+            btn.innerHTML = originalText;
+        }
+      } catch(e) { 
+        showModal("Error de Conexión", "No pudimos enviar tu registro. Revisa tu internet e intenta nuevamente.", false); 
+        btn.disabled = false; 
+        btn.innerHTML = originalText; 
+      }
     });
   </script>
 </body>
